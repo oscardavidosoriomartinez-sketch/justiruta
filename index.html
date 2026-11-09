@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>JustiRuta | Orientación Jurídica Ciudadana</title>
+<style>
+:root{--navy:#12304a;--blue:#1e6b91;--mint:#e7f3ee;--paper:#f5f8fb;--ink:#243746;--muted:#617282;--line:#d8e1e8;--gold:#f3c969;--green:#2e7d32}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);font-family:Arial,sans-serif;color:var(--ink)}
+header{background:linear-gradient(120deg,#12304a,#1e6b91);color:white;padding:25px 18px;text-align:center}
+.wrap{max-width:980px;margin:auto}header h1{margin:0;font-size:32px}header p{margin:8px 0 0;color:#e4eef4;font-size:15px}
+main{max-width:980px;margin:22px auto;padding:0 15px}
+.card{background:white;border:1px solid var(--line);border-radius:16px;padding:24px;margin-bottom:18px;box-shadow:0 4px 16px #12304a0c}
+h2{color:var(--navy);margin-top:0}h3{color:var(--blue)}
+.small{font-size:13px;color:var(--muted);line-height:1.5}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:15px}
+button,.btn{border:0;border-radius:12px;padding:15px;background:var(--blue);color:white;font-weight:700;cursor:pointer;text-align:left;font-size:15px;transition:all 0.2s}
+button:hover,.btn:hover{filter:brightness(.92);transform:translateY(-1px)}
+button.secondary{background:#edf3f7;color:var(--navy);border:1px solid var(--line)}
+button:focus{outline:3px solid var(--gold)}
+.hidden{display:none}
+.pill{display:inline-block;background:var(--mint);padding:6px 12px;border-radius:20px;color:#245e4b;font-size:13px;font-weight:bold;margin-bottom:10px}
+ul{line-height:1.7;padding-left:20px}
+.notice{background:#fff7e4;border-left:4px solid var(--gold);padding:14px;border-radius:8px;line-height:1.6;margin:15px 0;font-size:14px}
+.solution-box{background:#f0f7f4;border:1px solid #c2e0d1;padding:18px;border-radius:12px;margin:15px 0}
+.solution-box h3{color:var(--green);margin-top:0}
+a{color:#12618b;overflow-wrap:anywhere}
+.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:20px}
+footer{text-align:center;padding:25px;color:var(--muted);font-size:13px}
+.progress{height:8px;background:#e7edf2;border-radius:9px;margin:16px 0;overflow:hidden}
+.progress span{display:block;height:8px;background:var(--green);border-radius:9px;width:0;transition:width 0.3s}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <h1>JustiRuta</h1>
+    <p>Encuentra orientación clara, documentos necesarios y autoridades competentes sin enredos jurídicos[cite: 1, 2].</p>
+  </div>
+</header>
+
+<main>
+  <!-- PANTALLA DE INICIO -->
+  <section class="card" id="home">
+    <span class="pill">Orientación Ciudadana Inicial</span>
+    <h2>¿Qué situación te afecta hoy?</h2>
+    <p>Elige el tema principal de tu consulta. Te haremos unas preguntas sencillas para conocer mejor tu caso y darte la ruta adecuada.</p>
+    
+    <div class="notice">
+      <b>Aviso importante:</b> JustiRuta ofrece información general y educativa. No emitimos conceptos jurídicos individuales ni reemplazamos a un abogado o autoridad[cite: 1, 2].
+    </div>
+
+    <h3>Selecciona el tema:</h3>
+    <div class="grid">
+      <button onclick="startTopic('laboral')">💼 Trabajo y derechos laborales<br><small style="color:#e4eef4;font-weight:normal">Despidos, sueldos atrasados, contratos</small></button>
+      <button onclick="startTopic('familia')">👨‍👩‍👧 Familia y alimentos<br><small style="color:#e4eef4;font-weight:normal">Cuotas alimentarias, custodia, visitas</small>[cite: 1]</button>
+      <button onclick="startTopic('arriendo')">🏠 Arrendamiento de vivienda<br><small style="color:#e4eef4;font-weight:normal">Problemas con el casero, entrega, pagos</small>[cite: 1]</button>
+      <button onclick="startTopic('pension')">🛡️ Pensión y seguridad social<br><small style="color:#e4eef4;font-weight:normal">Semanas cotizadas, Colpensiones, fondos</small>[cite: 1]</button>
+    </div>
+  </section>
+
+  <!-- PANTALLA DE PREGUNTAS SECUENCIALES -->
+  <section class="card hidden" id="questions">
+    <div class="pill" id="topicName"></div>
+    <div class="progress"><span id="bar"></span></div>
+    <h2 id="qTitle"></h2>
+    <p id="qDesc" class="small"></p>
+    <div class="grid" id="choices"></div>
+    <div class="actions" style="margin-top:25px;">
+      <button class="secondary" onclick="goHome()">← Volver al inicio</button>
+    </div>
+  </section>
+
+  <!-- PANTALLA DE RESULTADOS -->
+  <section class="card hidden" id="result">
+    <span class="pill">Ruta Institucional Recomendada</span>
+    <h2>Tu guía paso a paso</h2>
+    
+    <div class="solution-box" id="resultBody"></div>
+
+    <div class="notice">
+      <b>Recomendación final:</b> Verifica siempre los horarios, canales y requisitos exactos directamente con la entidad competente[cite: 2]. Si tienes una emergencia o un plazo límite cercano, busca ayuda profesional inmediata[cite: 2].
+    </div>
+
+    <div class="actions">
+      <button onclick="goHome()">Consultar otro tema</button>
+      <button class="secondary" onclick="window.print()">Imprimir o guardar guía</button>
+    </div>
+  </section>
+
+  <!-- SECCIÓN DE APOYO -->
+  <section class="card">
+    <h2>¿Dónde recibir asesoría gratuita o formal?</h2>
+    <p>Si necesitas que un profesional estudie tus documentos, te represente o te ayude en una conciliación formal, puedes acudir a:</p>
+    <ul>
+      <li><b>Consultorio Jurídico de CECAR:</b> Brinda atención gratuita a la comunidad bajo supervisión académica[cite: 2]. Consulta sus canales oficiales[cite: 2].</li>
+      <li><b>Personería Municipal de Sincelejo:</b> Institución de apoyo y veeduría ciudadana para la defensa de derechos[cite: 2].</li>
+      <li><b>Ministerio del Trabajo (Territorial Sucre):</b> Autoridad competente para asesoría y denuncias en asuntos laborales.</li>
+    </ul>
+    <p class="small">Herramienta desarrollada con base en el diagnóstico social y modelo Lean Canvas de JustiRuta (Sincelejo, 2026)[cite: 1, 2].</p>
+  </section>
+</main>
+
+<footer>
+  JustiRuta · Prototipo Académico 2026 · Facilitando el acceso a la justicia ciudadana[cite: 1, 2]
+</footer>
+
+<script>
+// ÁRBOL DE DECISIONES CON MÚLTIPLES PREGUNTAS
+const decisionTrees = {
+  laboral: {
+    name: "Trabajo y derechos laborales[cite: 1]",
+    steps: [
+      {
+        q: "¿Cuál de estas situaciones describe mejor tu problema?",
+        d: "Paso 1 de 2: Cuéntanos el motivo principal de tu inconformidad.",
+        choices: [
+          ["No me pagan el salario, las horas extra o las prestaciones", "falta_pago"],
+          ["Me despidieron sin justa causa o terminó mi contrato", "despido"]
+        ]
+      },
+      {
+        q: "¿Actualmente cuentas con documentos escritos de tu trabajo?",
+        d: "Paso 2 de 2: Esto nos ayuda a saber qué tan preparado estás para el trámite.",
+        choices: [
+          ["Sí, tengo contrato, desprendibles o mensajes escritos", "docs_si"],
+          ["No tengo documentos físicos ni digitales", "docs_no"]
+        ]
+      }
+    ],
+    // Generador de solución basado en las respuestas dadas
+    getSolution: function(answers) {
+      let docText = answers[1] === "docs_si" 
+        ? "• Tienes documentos a favor (contrato/mensajes), lo cual facilitará mucho el proceso de reclamación." 
+        : "• No cuentas con documentos escritos; será clave intentar conseguir historiales de pagos, chats o testigos.";
+      
+      return {
+        pasos: "1. Recopila toda la información posible sobre las fechas en que laboraste.<br>2. Intenta un acercamiento pacífico o un requerimiento por escrito.<br>3. Si el empleador no responde, presenta una solicitud de conciliación laboral.<br>" + docText,
+        documentos: "• Copia de cédula de ciudadanía.<br>• Contrato de trabajo o certificaciones (si las hay).<br>• Extractos bancarios, desprendibles de pago o chats con el empleador.",
+        autoridad: "<b>Ministerio del Trabajo (Inspección de Trabajo)</b> o <b>Consultorio Jurídico de CECAR</b>[cite: 2]."
+      };
+    }
+  },
+
+  familia: {
+    name: "Familia y alimentos[cite: 1]",
+    steps: [
+      {
+        q: "¿Cuál es el asunto principal que necesitas resolver?",
+        d: "Paso 1 de 2: Selecciona la situación familiar.",
+        choices: [
+          ["Necesito fijar, aumentar o reclamar cuota alimentaria", "alimentos"],
+          ["Tengo conflictos graves o situaciones de maltrato", "violencia"]
+        ]
+      },
+      {
+        q: "¿Existe una situación de peligro o agresión actual?",
+        d: "Paso 2 de 2: Esta pregunta es fundamental para priorizar tu seguridad.",
+        choices: [
+          ["Sí, hay peligro o agresión en este momento", "peligro_si"],
+          ["No hay peligro inmediato", "peligro_no"]
+        ]
+      }
+    ],
+    getSolution: function(answers) {
+      if(answers[0] === "violencia" || answers[1] === "peligro_si") {
+        return {
+          pasos: "1. <b>¡Prioriza tu seguridad!</b> Si estás en peligro inmediato, aléjate del lugar y busca protección.<br>2. Comunícate de inmediato con las líneas de emergencia de la Policía Nacional.<br>3. Acude a instaurar la medida de protección correspondiente.",
+          documentos: "• Documento de identidad.<br>• Relación de los hechos ocurridos y fechas aproximadas.",
+          autoridad: "<b>Línea de Emergencia 123</b>, <b>Comisaría de Familia</b> o <b>Fiscalía General de la Nación</b>."
+        };
+      } else {
+        return {
+          pasos: "1. Intenta un diálogo de conciliación con la otra parte para fijar montos o acuerdos de alimentos.<br>2. Si no hay acuerdo, radica la solicitud formal de fijación de cuota de alimentos.",
+          documentos: "• Registro civil de nacimiento de los hijos menores.<br>• Tu documento de identidad.<br>• Lista básica de gastos mensuales del menor (comida, estudio, salud, vivienda).",
+          autoridad: "<b>Comisaría de Familia</b>, <b>Defensoría de Familia (ICBF)</b> o <b>Consultorio Jurídico de CECAR</b>[cite: 2]."
+        };
+      }
+    }
+  },
+
+  arriendo: {
+    name: "Arrendamiento de vivienda[cite: 1]",
+    steps: [
+      {
+        q: "¿Cuál es el inconveniente principal con el inmueble?",
+        d: "Paso 1 de 2: Identifica el problema con tu arrendador.",
+        choices: [
+          ["Me exigen desalojar de forma repentina o injusta", "desalojo"],
+          ["Hay daños graves, reparaciones pendientes o cobros injustos", "reparaciones"]
+        ]
+      },
+      {
+        q: "¿Firmaste un contrato de arrendamiento por escrito?",
+        d: "Paso 2 de 2: Saber esto define las cláusulas a revisar.",
+        choices: [
+          ["Sí, tengo contrato firmado", "contrato_si"],
+          ["No, el acuerdo fue verbal", "contrato_no"]
+        ]
+      }
+    ],
+    getSolution: function(answers) {
+      let contratoNota = answers[1] === "contrato_si" 
+        ? "• Tienes un contrato escrito; revisa las cláusulas de terminación y preavisos." 
+        : "• Al ser un acuerdo verbal, debes apoyarte en recibos de pago y testigos.";
+      
+      return {
+        pasos: "1. Revisa las condiciones pactadas y conserva todos los recibos de pago.<br>2. Evita entregar el inmueble o actuar a la fuerza sin asesoría previa.<br>" + contratoNota,
+        documentos: "• Contrato de arrendamiento (si existe).<br>• Recibos o comprobantes de transferencia de los últimos meses.<br>• Fotografías del estado de la vivienda o de los daños.",
+        autoridad: "<b>Inspección de Policía</b> (para mediación de convivencia) o <b>Consultorio Jurídico</b>[cite: 2]."
+      };
+    }
+  },
+
+  pension: {
+    name: "Pensión y seguridad social[cite: 1]",
+    steps: [
+      {
+        q: "¿Qué duda específica tienes sobre tu pensión?",
+        d: "Paso 1 de 2: Selecciona tu estado actual.",
+        choices: [
+          ["No sé cuántas semanas tengo ni cómo ver mi historia laboral", "historia"],
+          ["Me negaron una solicitud pensional o corrección de semanas", "negada"]
+        ]
+      },
+      {
+        q: "¿Sabes en qué fondo o entidad estás afiliado?",
+        d: "Paso 2 de 2: Esto ayuda a orientar tu solicitud.",
+        choices: [
+          ["Sí, estoy en Colpensiones o en un fondo privado", "fondo_si"],
+          ["No lo sé con certeza", "fondo_no"]
+        ]
+      }
+    ],
+    getSolution: function(answers) {
+      return {
+        pasos: "1. Solicita tu historia laboral unificada directamente en la página web de la entidad correspondiente.<br>2. Revisa detalladamente si hay periodos o semanas faltantes con antiguos empleadores.<br>3. Radica una petición formal por escrito si encuentras errores.",
+        documentos: "• Cédula de ciudadanía ampliada.<br>• Historia laboral de los fondos donde hayas cotizado.<br>• Certificados de trabajo antiguos (si necesitas recuperar semanas).",
+        autoridad: "<b>Colpensiones</b>, tu <b>Fondo Privado de Pensiones (RAIS)</b> o asesoría especializada en seguridad social / <b>Consultorio Jurídico</b>[cite: 2]."
+      };
+    }
+  }
+};
+
+let currentTopicKey = "";
+let currentStepIndex = 0;
+let userAnswers = [];
+
+function startTopic(key) {
+  currentTopicKey = key;
+  currentStepIndex = 0;
+  userAnswers = [];
+  
+  document.getElementById("home").classList.add("hidden");
+  document.getElementById("result").classList.add("hidden");
+  document.getElementById("questions").classList.remove("hidden");
+  
+  renderStep();
+}
+
+function renderStep() {
+  let topicData = decisionTrees[currentTopicKey];
+  let stepData = topicData.steps[currentStepIndex];
+  
+  document.getElementById("topicName").textContent = topicData.name;
+  document.getElementById("qTitle").textContent = stepData.q;
+  document.getElementById("qDesc").textContent = stepData.d;
+  
+  // Barra de progreso dinámica basada en los pasos totales
+  let progressPercent = ((currentStepIndex + 1) / topicData.steps.length) * 100;
+  document.getElementById("bar").style.width = progressPercent + "%";
+  
+  let choicesDiv = document.getElementById("choices");
+  choicesDiv.innerHTML = "";
+  
+  stepData.choices.forEach(([label, val]) => {
+    let btn = document.createElement("button");
+    btn.innerHTML = `🔹 ${label}`;
+    btn.onclick = () => {
+      userAnswers.push(val);
+      currentStepIndex++;
+      
+      // Si hay más preguntas en este tema, avanzamos al siguiente paso
+      if (currentStepIndex < topicData.steps.length) {
+        renderStep();
+      } else {
+        // Si ya terminamos las preguntas, mostramos la solución personalizada
+        showFinalResult();
+      }
+    };
+    choicesDiv.appendChild(btn);
+  });
+}
+
+function showFinalResult() {
+  document.getElementById("questions").classList.add("hidden");
+  document.getElementById("result").classList.remove("hidden");
+  
+  let topicData = decisionTrees[currentTopicKey];
+  let sol = topicData.getSolution(userAnswers);
+  
+  let html = `
+    <h3>Tema: ${topicData.name}</h3>
+    <p><b>Proceso de orientación completado con éxito.</b></p>
+    <hr style="border:0; border-top:1px solid #c2e0d1; margin:15px 0;">
+    
+    <h4 style="color:#12304a; margin-bottom:5px;">📋 ¿Qué debes hacer (Solución orientativa)?</h4>
+    <p>${sol.pasos}</p>
+    
+    <h4 style="color:#12304a; margin-bottom:5px; margin-top:15px;">📁 ¿Qué documentos debes llevar?</h4>
+    <p>${sol.documentos}</p>
+    
+    <h4 style="color:#12304a; margin-bottom:5px; margin-top:15px;">🏛️ Autoridad competente recomendada:</h4>
+    <p>${sol.autoridad}</p>
+  `;
+  
+  document.getElementById("resultBody").innerHTML = html;
+}
+
+function goHome() {
+  document.getElementById("home").classList.remove("hidden");
+  document.getElementById("questions").classList.add("hidden");
+  document.getElementById("result").classList.add("hidden");
+}
+</script>
+
+</body>
+</html>
+
+
+
